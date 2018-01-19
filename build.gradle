@@ -1,0 +1,39 @@
+apply plugin: 'java'
+
+group "net.bdew.wurm"
+version "0.1"
+
+repositories {
+    mavenCentral()
+    maven { url "http://gotti.no-ip.org/maven/repository" }
+}
+
+configurations {
+    provided
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
+
+dependencies {
+    provided 'org.gotti.wurmunlimited:server-modlauncher:0.32'
+    compile 'org.yaml:snakeyaml:1.19'
+}
+
+jar {
+    archiveName "${project.name}.jar"
+}
+
+task dist(type: Zip) {
+    into("mods", {
+        into(project.name, {
+            from jar
+            from configurations.compile
+        })
+        from fileTree(dir: 'mods', include: '*')
+    })
+    archiveName "${project.name}-${project.version}.zip"
+}
