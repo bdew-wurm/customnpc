@@ -54,7 +54,7 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
                         }
                     });
 
-            ctCreature.getMethod("mayAccessHold","(Lcom/wurmonline/server/creatures/Creature;)Z")
+            ctCreature.getMethod("mayAccessHold", "(Lcom/wurmonline/server/creatures/Creature;)Z")
                     .insertAfter("$_ = $_ || net.bdew.wurm.customnpc.Hooks.canManage($1,this);");
 
             classPool.getCtClass("com.wurmonline.server.creatures.Creatures")
@@ -74,23 +74,23 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
             ctCommunicator.getMethod("reallyHandle_CMD_NEW_FACE", "(Ljava/nio/ByteBuffer;)V")
                     .insertBefore("if (net.bdew.wurm.customnpc.Hooks.handleNewFace($1)) return;");
 
-                    ctCommunicator.getMethod("reallyHandle_CMD_MOVE_INVENTORY","(Ljava/nio/ByteBuffer;)V").instrument(new ExprEditor(){
-                        @Override
-                        public void edit(MethodCall m) throws CannotCompileException {
-                            if (m.getMethodName().equals("getDominator")) {
-                                m.replace("if (net.bdew.wurm.customnpc.Hooks.canManage(this.player, $0)) {" +
-                                        "$_ = this.player;" +
-                                        "} else {" +
-                                        "$_ = $proceed($$);" +
-                                        "}");
-                                logInfo(String.format("Patched getDominator in Communicator.reallyHandle_CMD_MOVE_INVENTORY at %d", m.getLineNumber()));
-                            } else if (m.getMethodName().equals("isReborn")) {
-                                m.replace("$_ = $proceed() || net.bdew.wurm.customnpc.Hooks.canManage(this.player, $0);");
-                                logInfo(String.format("Patched isReborn in Communicator.reallyHandle_CMD_MOVE_INVENTORY at %d", m.getLineNumber()));
-                            }
+            ctCommunicator.getMethod("reallyHandle_CMD_MOVE_INVENTORY", "(Ljava/nio/ByteBuffer;)V").instrument(new ExprEditor() {
+                @Override
+                public void edit(MethodCall m) throws CannotCompileException {
+                    if (m.getMethodName().equals("getDominator")) {
+                        m.replace("if (net.bdew.wurm.customnpc.Hooks.canManage(this.player, $0)) {" +
+                                "$_ = this.player;" +
+                                "} else {" +
+                                "$_ = $proceed($$);" +
+                                "}");
+                        logInfo(String.format("Patched getDominator in Communicator.reallyHandle_CMD_MOVE_INVENTORY at %d", m.getLineNumber()));
+                    } else if (m.getMethodName().equals("isReborn")) {
+                        m.replace("$_ = $proceed() || net.bdew.wurm.customnpc.Hooks.canManage(this.player, $0);");
+                        logInfo(String.format("Patched isReborn in Communicator.reallyHandle_CMD_MOVE_INVENTORY at %d", m.getLineNumber()));
+                    }
 
-                        }
-                    });
+                }
+            });
 
 
             classPool.getCtClass("com.wurmonline.server.creatures.Npc")

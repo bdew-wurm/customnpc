@@ -3,39 +3,25 @@ package net.bdew.wurm.customnpc.manage;
 import com.wurmonline.server.behaviours.Action;
 import com.wurmonline.server.behaviours.ActionEntry;
 import com.wurmonline.server.creatures.Creature;
-import com.wurmonline.server.items.Item;
 import com.wurmonline.server.villages.Village;
 import net.bdew.wurm.customnpc.CustomAIData;
 import net.bdew.wurm.customnpc.movement.MovementVillage;
-import org.gotti.wurmunlimited.modsupport.actions.ActionPerformer;
 import org.gotti.wurmunlimited.modsupport.actions.ModActions;
 
-import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.*;
+import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.FINISH_ACTION;
+import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.NO_ACTION_PERFORMER_PROPAGATION;
+import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.NO_SERVER_PROPAGATION;
 
-public class MovementVillageAction implements ActionPerformer {
-    ActionEntry actionEntry;
-
+public class MovementVillageAction extends BaseManagementAction {
     public MovementVillageAction() {
-        actionEntry = ActionEntry.createEntry((short) ModActions.getNextActionId(), "Village wander", "managing", new int[]{
+        super(ActionEntry.createEntry((short) ModActions.getNextActionId(), "Village wander", "managing", new int[]{
                 48 /* ACTION_TYPE_ENEMY_ALWAYS */,
                 37 /* ACTION_TYPE_NEVER_USE_ACTIVE_ITEM */
-        });
-        ModActions.registerAction(actionEntry);
+        }));
     }
-
-    @Override
-    public short getActionId() {
-        return actionEntry.getNumber();
-    }
-
 
     public boolean canUse(Creature performer, Creature target) {
-        return ManageBehaviourProvider.canManage(performer, target) && target.getCurrentTile().getVillage() != null;
-    }
-
-    @Override
-    public boolean action(Action action, Creature performer, Item source, Creature target, short num, float counter) {
-        return action(action, performer, target, num, counter);
+        return super.canUse(performer, target) && target.getCurrentTile().getVillage() != null;
     }
 
     @Override
@@ -47,6 +33,7 @@ public class MovementVillageAction implements ActionPerformer {
             movement.setVillage(village);
             data.getConfig().setMovementScript(movement);
             data.configUpdated();
+            data.setNextMovement(null);
             performer.getCommunicator().sendNormalServerMessage(String.format("%s will now wander around %s.", target.getName(), village.getName()));
 
         }

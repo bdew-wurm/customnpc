@@ -17,7 +17,7 @@ import net.bdew.wurm.customnpc.config.ConfigLoadError;
 import java.io.PrintStream;
 import java.util.Map;
 
-public class MovementVillage implements IMovementScript {
+public class MovementVillage implements IMovementScript, IMovementExecutor {
     private final static int TIMER_MOVE = 1;
 
     private Village village;
@@ -75,5 +75,15 @@ public class MovementVillage implements IMovementScript {
             }
         }
         return false;
+    }
+
+    @Override
+    public IMovementExecutor getNextExecutor(Creature creature, CreatureStatus status, CustomAIScript ai, CustomAIData data) {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("MovementVillage(%s)", this.village.getName());
     }
 }

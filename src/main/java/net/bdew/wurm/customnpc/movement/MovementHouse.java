@@ -18,7 +18,7 @@ import net.bdew.wurm.customnpc.config.ConfigLoadError;
 import java.io.PrintStream;
 import java.util.Map;
 
-public class MovementHouse implements IMovementScript {
+public class MovementHouse implements IMovementScript, IMovementExecutor {
     private final static int TIMER_MOVE = 1;
 
     private Structure house;
@@ -77,5 +77,15 @@ public class MovementHouse implements IMovementScript {
             }
         }
         return false;
+    }
+
+    @Override
+    public IMovementExecutor getNextExecutor(Creature creature, CreatureStatus status, CustomAIScript ai, CustomAIData data) {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("MovementHouse(%s)", this.house.getName());
     }
 }

@@ -14,5 +14,5 @@ public interface IMovementScript {
 
     void saveToFile(PrintStream file);
 
-    public boolean pollMovement(Creature creature, CreatureStatus status, CustomAIScript ai, CustomAIData data, long delta);
+    IMovementExecutor getNextExecutor(Creature creature, CreatureStatus status, CustomAIScript ai, CustomAIData data);
 }

@@ -49,7 +49,7 @@ public class NPCConfig {
         name = creature.getName();
         Random rng = new Random();
         rng.setSeed(creature.getWurmId());
-        face =  rng.nextLong();
+        face = rng.nextLong();
         movementScript = new MovementStatic();
     }
 

@@ -3,41 +3,27 @@ package net.bdew.wurm.customnpc.manage;
 import com.wurmonline.server.behaviours.Action;
 import com.wurmonline.server.behaviours.ActionEntry;
 import com.wurmonline.server.creatures.Creature;
-import com.wurmonline.server.items.Item;
 import com.wurmonline.server.structures.Structure;
 import net.bdew.wurm.customnpc.CustomAIData;
 import net.bdew.wurm.customnpc.movement.MovementHouse;
-import org.gotti.wurmunlimited.modsupport.actions.ActionPerformer;
 import org.gotti.wurmunlimited.modsupport.actions.ModActions;
 
-import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.*;
+import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.FINISH_ACTION;
+import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.NO_ACTION_PERFORMER_PROPAGATION;
+import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.NO_SERVER_PROPAGATION;
 
-public class MovementHouseAction implements ActionPerformer {
-    ActionEntry actionEntry;
-
+public class MovementHouseAction extends BaseManagementAction {
     public MovementHouseAction() {
-        actionEntry = ActionEntry.createEntry((short) ModActions.getNextActionId(), "House wander", "managing", new int[]{
+        super(ActionEntry.createEntry((short) ModActions.getNextActionId(), "House wander", "managing", new int[]{
                 48 /* ACTION_TYPE_ENEMY_ALWAYS */,
                 37 /* ACTION_TYPE_NEVER_USE_ACTIVE_ITEM */
-        });
-        ModActions.registerAction(actionEntry);
+        }));
     }
-
-    @Override
-    public short getActionId() {
-        return actionEntry.getNumber();
-    }
-
 
     public boolean canUse(Creature performer, Creature target) {
-        if (!ManageBehaviourProvider.canManage(performer, target)) return false;
+        if (!super.canUse(performer, target)) return false;
         Structure structure = target.getCurrentTile().getStructure();
         return structure != null && structure.isTypeHouse();
-    }
-
-    @Override
-    public boolean action(Action action, Creature performer, Item source, Creature target, short num, float counter) {
-        return action(action, performer, target, num, counter);
     }
 
     @Override
@@ -49,6 +35,7 @@ public class MovementHouseAction implements ActionPerformer {
             movement.setHouse(structure);
             data.getConfig().setMovementScript(movement);
             data.configUpdated();
+            data.setNextMovement(null);
             performer.getCommunicator().sendNormalServerMessage(String.format("%s will now wander inside %s.", target.getName(), structure.getName()));
 
         }

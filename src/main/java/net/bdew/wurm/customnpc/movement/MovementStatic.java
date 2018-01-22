@@ -8,7 +8,7 @@ import net.bdew.wurm.customnpc.CustomAIScript;
 import java.io.PrintStream;
 import java.util.Map;
 
-public class MovementStatic implements IMovementScript {
+public class MovementStatic implements IMovementScript, IMovementExecutor {
     @Override
     public void readFromObject(Map<String, Object> data) {
 
@@ -24,5 +24,15 @@ public class MovementStatic implements IMovementScript {
     public boolean pollMovement(Creature creature, CreatureStatus status, CustomAIScript ai, CustomAIData data, long delta) {
         MovementUtil.clearPath(status);
         return false;
+    }
+
+    @Override
+    public IMovementExecutor getNextExecutor(Creature creature, CreatureStatus status, CustomAIScript ai, CustomAIData data) {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "MovementStatic()";
     }
 }

@@ -9,9 +9,9 @@ import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.FINIS
 import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.NO_ACTION_PERFORMER_PROPAGATION;
 import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.NO_SERVER_PROPAGATION;
 
-public class CustomizeFaceAction extends BaseManagementAction {
-    public CustomizeFaceAction() {
-        super(ActionEntry.createEntry((short) ModActions.getNextActionId(), "Customize face", "managing", new int[]{
+public class FaceMeAction extends BaseManagementAction {
+    public FaceMeAction() {
+        super(ActionEntry.createEntry((short) ModActions.getNextActionId(), "Face me", "managing", new int[]{
                 48 /* ACTION_TYPE_ENEMY_ALWAYS */,
                 37 /* ACTION_TYPE_NEVER_USE_ACTIVE_ITEM */
         }));
@@ -20,7 +20,7 @@ public class CustomizeFaceAction extends BaseManagementAction {
     @Override
     public boolean action(Action action, Creature performer, Creature target, short num, float counter) {
         if (canUse(performer, target)) {
-            performer.getCommunicator().sendCustomizeFace(target.getFace(), target.getWurmId());
+            target.turnTowardsCreature(performer);
         }
         return propagate(action, FINISH_ACTION, NO_SERVER_PROPAGATION, NO_ACTION_PERFORMER_PROPAGATION);
     }
