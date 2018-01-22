@@ -2,6 +2,7 @@ package net.bdew.wurm.customnpc;
 
 import com.wurmonline.server.WurmId;
 import com.wurmonline.server.creatures.*;
+import net.bdew.wurm.customnpc.manage.ManageBehaviourProvider;
 
 import java.nio.ByteBuffer;
 
@@ -34,6 +35,10 @@ public class Hooks {
         }
         bb.reset();
         return false;
+    }
+
+    public static boolean canManage(Creature performer, Creature target) {
+        return isNpcTemplate(target.getTemplate()) && ManageBehaviourProvider.canManage(performer, target);
     }
 
     public static long getFace(Npc npc) {

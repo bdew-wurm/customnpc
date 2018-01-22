@@ -15,19 +15,22 @@ public class ManageBehaviourProvider implements BehaviourProvider {
     private final MovementVillageAction movementVillage;
     private final MovementHouseAction movementHouse;
     private final CustomizeFaceAction customizeFace;
+    private final EquipmentAction equipment;
 
     public ManageBehaviourProvider() {
         movementStatic = new MovementStaticAction();
         movementHouse = new MovementHouseAction();
         movementVillage = new MovementVillageAction();
         customizeFace = new CustomizeFaceAction();
+        equipment = new EquipmentAction();
         ModActions.registerActionPerformer(movementStatic);
         ModActions.registerActionPerformer(movementHouse);
         ModActions.registerActionPerformer(movementVillage);
         ModActions.registerActionPerformer(customizeFace);
+        ModActions.registerActionPerformer(equipment);
     }
 
-    static boolean canManage(Creature performer, Creature target) {
+    public static boolean canManage(Creature performer, Creature target) {
         return performer.getPower() >= 2 && NpcTemplate.npcTemplateIds.contains(target.getTemplate().getTemplateId());
     }
 
@@ -38,6 +41,7 @@ public class ManageBehaviourProvider implements BehaviourProvider {
         LinkedList<ActionEntry> manage = new LinkedList<>();
 
         manage.add(customizeFace.actionEntry);
+        manage.add(equipment.actionEntry);
 
         int manageEntries = manage.size();
 
