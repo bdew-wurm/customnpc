@@ -14,14 +14,17 @@ public class ManageBehaviourProvider implements BehaviourProvider {
     private final MovementStaticAction movementStatic;
     private final MovementVillageAction movementVillage;
     private final MovementHouseAction movementHouse;
+    private final CustomizeFaceAction customizeFace;
 
     public ManageBehaviourProvider() {
         movementStatic = new MovementStaticAction();
         movementHouse = new MovementHouseAction();
         movementVillage = new MovementVillageAction();
+        customizeFace = new CustomizeFaceAction();
         ModActions.registerActionPerformer(movementStatic);
         ModActions.registerActionPerformer(movementHouse);
         ModActions.registerActionPerformer(movementVillage);
+        ModActions.registerActionPerformer(customizeFace);
     }
 
     static boolean canManage(Creature performer, Creature target) {
@@ -32,8 +35,11 @@ public class ManageBehaviourProvider implements BehaviourProvider {
     public List<ActionEntry> getBehavioursFor(Creature performer, Creature target) {
         if (!canManage(performer, target)) return null;
 
-        int manageSz = 0;
         LinkedList<ActionEntry> manage = new LinkedList<>();
+
+        manage.add(customizeFace.actionEntry);
+
+        int manageEntries = manage.size();
 
         LinkedList<ActionEntry> movement = new LinkedList<>();
         if (movementStatic.canUse(performer, target)) movement.add(movementStatic.actionEntry);
@@ -43,11 +49,10 @@ public class ManageBehaviourProvider implements BehaviourProvider {
         if (movement.size() > 0) {
             manage.add(new ActionEntry((short) -movement.size(), "Movement", ""));
             manage.addAll(movement);
-            manageSz += 1;
+            manageEntries += 1;
         }
 
-        if (manageSz > 0)
-            manage.add(0, new ActionEntry((short) -manageSz, "Manage NPC", ""));
+        manage.add(0, new ActionEntry((short) -manageEntries, "Manage NPC", ""));
 
         return manage;
     }

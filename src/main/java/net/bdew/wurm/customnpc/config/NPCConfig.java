@@ -12,6 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.util.Map;
+import java.util.Random;
 
 public class NPCConfig {
     private static Yaml yaml = new Yaml();
@@ -46,7 +47,9 @@ public class NPCConfig {
 
     public void initialize(Creature creature) {
         name = creature.getName();
-        face = creature.getFace();
+        Random rng = new Random();
+        rng.setSeed(creature.getWurmId());
+        face =  rng.nextLong();
         movementScript = new MovementStatic();
     }
 
@@ -55,7 +58,7 @@ public class NPCConfig {
         Map<String, Object> data = yaml.load(reader);
 
         if (data.containsKey("Face"))
-            face = (long) data.get("Face");
+            face = ((Number) data.get("Face")).longValue();
         else
             face = Server.rand.nextLong();
 
