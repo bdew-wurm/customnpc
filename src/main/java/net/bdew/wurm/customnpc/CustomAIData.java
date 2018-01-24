@@ -3,7 +3,7 @@ package net.bdew.wurm.customnpc;
 import com.wurmonline.server.ServerDirInfo;
 import com.wurmonline.server.creatures.ai.CreatureAIData;
 import net.bdew.wurm.customnpc.config.NPCConfig;
-import net.bdew.wurm.customnpc.movement.IMovementExecutor;
+import net.bdew.wurm.customnpc.movement.step.IMovementStep;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,7 +12,7 @@ import java.io.PrintStream;
 public class CustomAIData extends CreatureAIData {
     private static File dataPath;
     private NPCConfig config;
-    private IMovementExecutor nextMovement;
+    private IMovementStep nextMovement;
 
     public NPCConfig getConfig() {
         if (config == null) {
@@ -58,11 +58,11 @@ public class CustomAIData extends CreatureAIData {
         return new File(dataPath, getCreature().getWurmId() + ".cfg");
     }
 
-    public IMovementExecutor getNextMovement() {
+    public IMovementStep getNextMovement() {
         return nextMovement;
     }
 
-    public void setNextMovement(IMovementExecutor nextMovement) {
+    public void setNextMovement(IMovementStep nextMovement) {
         if (nextMovement != null) {
             CustomNpcMod.logInfo(String.format("New movement for %s: %s", getCreature().getName(), nextMovement.toString()));
         }

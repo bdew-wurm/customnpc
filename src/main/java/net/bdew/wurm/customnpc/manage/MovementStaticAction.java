@@ -4,7 +4,7 @@ import com.wurmonline.server.behaviours.Action;
 import com.wurmonline.server.behaviours.ActionEntry;
 import com.wurmonline.server.creatures.Creature;
 import net.bdew.wurm.customnpc.CustomAIData;
-import net.bdew.wurm.customnpc.movement.MovementStatic;
+import net.bdew.wurm.customnpc.movement.script.MovementStatic;
 import org.gotti.wurmunlimited.modsupport.actions.ModActions;
 
 import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.FINISH_ACTION;

@@ -1,14 +1,16 @@
-package net.bdew.wurm.customnpc.movement;
+package net.bdew.wurm.customnpc.movement.script;
 
 import com.wurmonline.server.creatures.Creature;
 import com.wurmonline.server.creatures.CreatureStatus;
 import net.bdew.wurm.customnpc.CustomAIData;
 import net.bdew.wurm.customnpc.CustomAIScript;
+import net.bdew.wurm.customnpc.movement.MovementUtil;
+import net.bdew.wurm.customnpc.movement.step.IMovementStep;
 
 import java.io.PrintStream;
 import java.util.Map;
 
-public class MovementStatic implements IMovementScript, IMovementExecutor {
+public class MovementStatic implements IMovementScript, IMovementStep {
     @Override
     public void readFromObject(Map<String, Object> data) {
 
@@ -27,7 +29,7 @@ public class MovementStatic implements IMovementScript, IMovementExecutor {
     }
 
     @Override
-    public IMovementExecutor getNextExecutor(Creature creature, CreatureStatus status, CustomAIScript ai, CustomAIData data) {
+    public IMovementStep getNextStep(Creature creature, CreatureStatus status, CustomAIScript ai, CustomAIData data) {
         return this;
     }
 

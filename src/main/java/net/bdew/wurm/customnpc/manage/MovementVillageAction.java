@@ -5,7 +5,7 @@ import com.wurmonline.server.behaviours.ActionEntry;
 import com.wurmonline.server.creatures.Creature;
 import com.wurmonline.server.villages.Village;
 import net.bdew.wurm.customnpc.CustomAIData;
-import net.bdew.wurm.customnpc.movement.MovementVillage;
+import net.bdew.wurm.customnpc.movement.script.MovementVillage;
 import org.gotti.wurmunlimited.modsupport.actions.ModActions;
 
 import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.FINISH_ACTION;

@@ -5,7 +5,7 @@ import com.wurmonline.server.behaviours.ActionEntry;
 import com.wurmonline.server.creatures.Creature;
 import com.wurmonline.server.structures.Structure;
 import net.bdew.wurm.customnpc.CustomAIData;
-import net.bdew.wurm.customnpc.movement.MovementHouse;
+import net.bdew.wurm.customnpc.movement.script.MovementHouse;
 import org.gotti.wurmunlimited.modsupport.actions.ModActions;
 
 import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.FINISH_ACTION;

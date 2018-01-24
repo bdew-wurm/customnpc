@@ -4,18 +4,18 @@ import com.wurmonline.server.creatures.Creature;
 import com.wurmonline.server.creatures.ai.CreatureAI;
 import com.wurmonline.server.creatures.ai.CreatureAIData;
 import com.wurmonline.server.creatures.ai.PathTile;
-import net.bdew.wurm.customnpc.movement.IMovementExecutor;
+import net.bdew.wurm.customnpc.movement.step.IMovementStep;
 
 public class CustomAIScript extends CreatureAI {
     @Override
     protected boolean pollMovement(Creature creature, long delta) {
         CustomAIData data = (CustomAIData) (creature.getCreatureAIData());
-        IMovementExecutor next = data.getNextMovement();
+        IMovementStep next = data.getNextMovement();
         if (next == null) {
-            next = data.getConfig().getMovementScript().getNextExecutor(creature, creature.getStatus(), this, data);
+            next = data.getConfig().getMovementScript().getNextStep(creature, creature.getStatus(), this, data);
             data.setNextMovement(next);
         }
-        if (next.pollMovement(creature, creature.getStatus(), this, data, delta)) {
+        if ((next != null) && next.pollMovement(creature, creature.getStatus(), this, data, delta)) {
             CustomNpcMod.logInfo(String.format("Movement finished for %s: %s", creature.getName(), next.toString()));
             data.setNextMovement(null);
         }

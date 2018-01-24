@@ -60,7 +60,7 @@ public class NpcTemplate {
         return tpl;
     }
 
-    static void registerTempalate() throws NoSuchFieldException, IllegalAccessException {
+    static void registerTemplate() throws NoSuchFieldException, IllegalAccessException {
         npcTemplates.add(createNpcTemplate("bdew.npc.custom", "Custom NPC", "A relatively normal person stands here waiting for something to happen.", new CustomAIScript()));
 
         npcTemplates.stream().mapToInt(CreatureTemplate::getTemplateId).forEach(npcTemplateIds::add);

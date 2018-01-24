@@ -4,8 +4,8 @@ import com.wurmonline.server.behaviours.Action;
 import com.wurmonline.server.behaviours.ActionEntry;
 import com.wurmonline.server.creatures.Creature;
 import net.bdew.wurm.customnpc.CustomAIData;
-import net.bdew.wurm.customnpc.movement.MovementPathfind;
-import net.bdew.wurm.customnpc.movement.MovementUtil;
+import net.bdew.wurm.customnpc.movement.TilePosLayer;
+import net.bdew.wurm.customnpc.movement.step.MovementPathfind;
 import org.gotti.wurmunlimited.modsupport.actions.ModActions;
 
 import static org.gotti.wurmunlimited.modsupport.actions.ActionPropagation.FINISH_ACTION;
@@ -25,7 +25,7 @@ public class ComeHereAction extends BaseManagementAction {
     public boolean action(Action action, Creature performer, Creature target, short num, float counter) {
         if (canUse(performer, target)) {
             CustomAIData data = (CustomAIData) target.getCreatureAIData();
-            data.setNextMovement(new MovementPathfind(MovementUtil.pathTileToCreature(target, performer), performer));
+            data.setNextMovement(new MovementPathfind(TilePosLayer.from(performer), performer));
         }
         return propagate(action, FINISH_ACTION, NO_SERVER_PROPAGATION, NO_ACTION_PERFORMER_PROPAGATION);
     }

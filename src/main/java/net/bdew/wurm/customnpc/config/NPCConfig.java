@@ -3,10 +3,10 @@ package net.bdew.wurm.customnpc.config;
 import com.wurmonline.server.Server;
 import com.wurmonline.server.creatures.Creature;
 import net.bdew.wurm.customnpc.CustomNpcMod;
-import net.bdew.wurm.customnpc.movement.IMovementScript;
-import net.bdew.wurm.customnpc.movement.MovementHouse;
-import net.bdew.wurm.customnpc.movement.MovementStatic;
-import net.bdew.wurm.customnpc.movement.MovementVillage;
+import net.bdew.wurm.customnpc.movement.script.IMovementScript;
+import net.bdew.wurm.customnpc.movement.script.MovementHouse;
+import net.bdew.wurm.customnpc.movement.script.MovementStatic;
+import net.bdew.wurm.customnpc.movement.script.MovementVillage;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileReader;

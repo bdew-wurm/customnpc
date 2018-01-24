@@ -110,7 +110,7 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
     @Override
     public void onItemTemplatesCreated() {
         try {
-            NpcTemplate.registerTempalate();
+            NpcTemplate.registerTemplate();
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }

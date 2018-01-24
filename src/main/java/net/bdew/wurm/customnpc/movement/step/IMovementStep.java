@@ -1,11 +1,11 @@
-package net.bdew.wurm.customnpc.movement;
+package net.bdew.wurm.customnpc.movement.step;
 
 import com.wurmonline.server.creatures.Creature;
 import com.wurmonline.server.creatures.CreatureStatus;
 import net.bdew.wurm.customnpc.CustomAIData;
 import net.bdew.wurm.customnpc.CustomAIScript;
 
-public interface IMovementExecutor {
+public interface IMovementStep {
     /**
      * Execute next movement action
      *
