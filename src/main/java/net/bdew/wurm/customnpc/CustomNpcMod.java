@@ -72,7 +72,7 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
             CtClass ctCommunicator = classPool.getCtClass("com.wurmonline.server.creatures.Communicator");
 
             ctCommunicator.getMethod("reallyHandle_CMD_NEW_FACE", "(Ljava/nio/ByteBuffer;)V")
-                    .insertBefore("if (net.bdew.wurm.customnpc.Hooks.handleNewFace($1)) return;");
+                    .insertBefore("if (net.bdew.wurm.customnpc.Hooks.handleNewFace(this, $1)) return;");
 
             ctCommunicator.getMethod("reallyHandle_CMD_MOVE_INVENTORY", "(Ljava/nio/ByteBuffer;)V").instrument(new ExprEditor() {
                 @Override

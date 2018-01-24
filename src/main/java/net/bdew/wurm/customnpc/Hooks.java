@@ -15,18 +15,20 @@ public class Hooks {
         return NpcTemplate.npcTemplateNames.contains(name);
     }
 
-    public static boolean handleNewFace(ByteBuffer bb) {
+    public static boolean handleNewFace(Communicator comm, ByteBuffer bb) {
         bb.mark();
         long face = bb.getLong();
         long item = bb.getLong();
         if (WurmId.getType(item) == WurmId.COUNTER_TYPE_CREATURES) {
             try {
                 Creature creature = Creatures.getInstance().getCreature(item);
-                if (NpcTemplate.npcTemplateIds.contains(creature.getTemplate().getTemplateId())) {
+                if (canManage(comm.getPlayer(), creature)) {
                     CustomAIData data = ((CustomAIData) (creature.getCreatureAIData()));
                     data.getConfig().setFace(face);
                     data.configUpdated();
                     creature.getCurrentTile().setNewFace(creature);
+                    comm.sendChangeModelName(comm.getPlayer().getWurmId(), comm.getPlayer().getModelName());
+                    comm.sendNewFace(-10L, comm.getPlayer().getFace());
                     return true;
                 }
             } catch (NoSuchCreatureException e) {

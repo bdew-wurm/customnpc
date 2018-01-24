@@ -20,6 +20,7 @@ public class CustomizeFaceAction extends BaseManagementAction {
     @Override
     public boolean action(Action action, Creature performer, Creature target, short num, float counter) {
         if (canUse(performer, target)) {
+            performer.getCommunicator().sendChangeModelName(performer.getWurmId(), target.getSex() == 0 ? "model.creature.humanoid.human.player.male" : "model.creature.humanoid.human.player.female");
             performer.getCommunicator().sendCustomizeFace(target.getFace(), target.getWurmId());
         }
         return propagate(action, FINISH_ACTION, NO_SERVER_PROPAGATION, NO_ACTION_PERFORMER_PROPAGATION);
