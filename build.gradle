@@ -19,7 +19,7 @@ sourceSets {
 }
 
 dependencies {
-    provided 'org.gotti.wurmunlimited:server-modlauncher:0.32'
+    provided 'org.gotti.wurmunlimited:server-modlauncher:0.33'
     compile 'org.yaml:snakeyaml:1.19'
 }
 
