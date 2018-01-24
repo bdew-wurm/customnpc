@@ -9,6 +9,7 @@ import net.bdew.wurm.customnpc.movement.step.IMovementStep;
 
 import java.io.PrintStream;
 import java.util.Map;
+import java.util.Properties;
 
 public interface IMovementScript {
     void readFromObject(Map<String, Object> data) throws ConfigLoadError;
@@ -16,4 +17,8 @@ public interface IMovementScript {
     void saveToFile(PrintStream file);
 
     IMovementStep getNextStep(Creature creature, CreatureStatus status, CustomAIScript ai, CustomAIData data);
+
+    void configBML(Creature creature, StringBuilder buf);
+
+    void processConfig(Creature creature, Properties properties);
 }

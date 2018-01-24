@@ -55,6 +55,6 @@ public final class TilePosLayer {
 
     @Override
     public String toString() {
-        return String.format("TilePosLayer{x=%d, y=%d, onSurface=%s, floor=%d}", x, y, onSurface, floor);
+        return String.format("TilePosLayer(x=%d, y=%d, onSurface=%s, floor=%d)", x, y, onSurface, floor);
     }
 }

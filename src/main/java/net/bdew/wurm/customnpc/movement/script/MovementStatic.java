@@ -9,6 +9,7 @@ import net.bdew.wurm.customnpc.movement.step.IMovementStep;
 
 import java.io.PrintStream;
 import java.util.Map;
+import java.util.Properties;
 
 public class MovementStatic implements IMovementScript, IMovementStep {
     @Override
@@ -36,5 +37,15 @@ public class MovementStatic implements IMovementScript, IMovementStep {
     @Override
     public String toString() {
         return "MovementStatic()";
+    }
+
+    @Override
+    public void configBML(Creature creature, StringBuilder buf) {
+        buf.append("label{type='bold';text='Movement: Static'}");
+    }
+
+    @Override
+    public void processConfig(Creature creature, Properties properties) {
+
     }
 }

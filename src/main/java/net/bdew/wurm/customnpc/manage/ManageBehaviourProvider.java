@@ -18,6 +18,7 @@ public class ManageBehaviourProvider implements BehaviourProvider {
         manageActions.add(new EquipmentAction());
         manageActions.add(new ComeHereAction());
         manageActions.add(new FaceMeAction());
+        manageActions.add(new SettingsAction());
 
         movementActions = new LinkedList<>();
         movementActions.add(new MovementStaticAction());

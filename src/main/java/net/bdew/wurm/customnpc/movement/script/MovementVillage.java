@@ -69,6 +69,13 @@ public class MovementVillage extends MovementRandomArea implements IMovementScri
     }
 
     @Override
+    public void configBML(Creature creature, StringBuilder buf) {
+        buf.append("label{type='bold';text=\"Movement: Wander in village - ").append(village.getName()).append("\"}");
+        buf.append("text{text=''}");
+        super.configBML(creature, buf);
+    }
+
+    @Override
     public String toString() {
         return String.format("MovementVillage(%s)", this.village.getName());
     }

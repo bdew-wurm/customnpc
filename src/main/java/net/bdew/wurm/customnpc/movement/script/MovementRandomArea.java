@@ -14,6 +14,7 @@ import net.bdew.wurm.customnpc.movement.step.MovementTeleport;
 
 import java.io.PrintStream;
 import java.util.Map;
+import java.util.Properties;
 
 abstract public class MovementRandomArea implements IMovementScript {
 
@@ -60,9 +61,23 @@ abstract public class MovementRandomArea implements IMovementScript {
             CustomNpcMod.logInfo(String.format("NPC %d is outside it's designated zone, teleporting back", creature.getWurmId()));
             return new MovementTeleport(originTile(creature));
         } else if (Server.rand.nextFloat() <= movementChance) {
-            return new MovementPathfind(randomTile(creature), null);
+            return new MovementPathfind(randomTile(creature), movementSpeedMod, null);
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void configBML(Creature creature, StringBuilder buf) {
+        buf.append("harray{label{text='Speed Modifier:'};input{id='movementSpeedMod'; text=\"").append(movementSpeedMod).append("\";maxchars='10'}}");
+        buf.append("harray{label{text='Movement Chance:'};input{id='movementChance'; text=\"").append(movementChance).append("\";maxchars='10'}}");
+    }
+
+    @Override
+    public void processConfig(Creature creature, Properties properties) {
+        if (properties.containsKey("movementSpeedMod"))
+            movementSpeedMod = Float.parseFloat(properties.getProperty("movementSpeedMod"));
+        if (properties.containsKey("movementChance"))
+            movementChance = Float.parseFloat(properties.getProperty("movementChance"));
     }
 }

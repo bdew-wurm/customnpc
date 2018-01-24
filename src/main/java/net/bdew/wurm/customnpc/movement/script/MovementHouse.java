@@ -63,6 +63,13 @@ public class MovementHouse extends MovementRandomArea implements IMovementScript
     }
 
     @Override
+    public void configBML(Creature creature, StringBuilder buf) {
+        buf.append("label{type='bold';text=\"Movement: Wander in house - ").append(house.getName()).append("\"}");
+        buf.append("text{text=''}");
+        super.configBML(creature, buf);
+    }
+
+    @Override
     public String toString() {
         return String.format("MovementHouse(%s)", this.house.getName());
     }

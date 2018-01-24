@@ -15,10 +15,12 @@ public class MovementPathfind implements IMovementStep {
     private final TilePosLayer target;
     private final Creature reportTo;
     private int lastTileX, lastTileY, lastCounter = 0;
+    private float speedMod;
 
-    public MovementPathfind(TilePosLayer target, Creature reportTo) {
+    public MovementPathfind(TilePosLayer target, float speedMod, Creature reportTo) {
         this.target = target;
         this.reportTo = reportTo;
+        this.speedMod = speedMod;
     }
 
     private void reportFailed(String msg) {
@@ -39,6 +41,7 @@ public class MovementPathfind implements IMovementStep {
             lastTileX = creature.getTileX();
             lastTileY = creature.getTileY();
             MovementUtil.clearPath(status);
+            data.setMovementSpeedModifier(speedMod);
             try {
                 creature.setPathfindcounter(0);
                 Path path = creature.findPath(target.x, target.y, MovementUtil.pathFinder);
@@ -70,6 +73,6 @@ public class MovementPathfind implements IMovementStep {
 
     @Override
     public String toString() {
-        return String.format("MovementPathfind(%s, started=%s)", target, started);
+        return String.format("MovementPathfind(target=%s, started=%s, reportTo=%s, lastTileX=%d, lastTileY=%d, lastCounter=%d, speedMod=%s)", target, started, reportTo, lastTileX, lastTileY, lastCounter, speedMod);
     }
 }
