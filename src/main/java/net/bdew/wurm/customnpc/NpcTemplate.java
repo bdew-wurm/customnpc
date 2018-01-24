@@ -49,9 +49,10 @@ public class NpcTemplate {
                 .meatMaterial(Materials.MATERIAL_MEAT_HUMAN)
                 .baseCombatRating(99f)
                 .maxGroupAttackSize(4)
+                .hasHands(true)
                 .build();
 
-        ReflectionUtil.setPrivateField(tpl, ReflectionUtil.getField(CreatureTemplate.class, "hasHands"), true);
+        ReflectionUtil.setPrivateField(tpl, ReflectionUtil.getField(CreatureTemplate.class, "swimming"), true);
 
         tpl.setCreatureAI(ai);
 
