@@ -3,6 +3,8 @@ package net.bdew.wurm.customnpc;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtField;
+import javassist.Modifier;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 import javassist.expr.NewExpr;
@@ -97,29 +99,21 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
                     .getMethod("getFace", "()J")
                     .insertBefore("if (net.bdew.wurm.customnpc.Hooks.isNpcTemplate(this.getTemplate())) return net.bdew.wurm.customnpc.Hooks.getFace(this);");
 
+            CtClass staticPathFinderNPCCt = classPool
+                .getCtClass("com.wurmonline.server.creatures.ai.StaticPathFinderNPC");
+
+            CtField useCustomCost = new CtField(CtClass.booleanType, "useCustomCost", staticPathFinderNPCCt);
+            useCustomCost.setModifiers(Modifier.STATIC);
+
+            staticPathFinderNPCCt.addField(useCustomCost, CtField.Initializer.constant(false));
+
+            classPool.getCtClass("com.wurmonline.server.creatures.ai.StaticPathFinderNPC")
+            .getConstructor("()V")
+            .setBody("{ if (new Throwable().getStackTrace()[1].getClassName() == \"net.bdew.wurm.customnpc.movement.MovementUtil\") { this.useCustomCost = true; } }");
+
             classPool.getCtClass("com.wurmonline.server.creatures.ai.StaticPathFinderNPC")
                 .getMethod("getCost", "(I)F")
-                .instrument(new ExprEditor() {
-                    @Override
-                    public void edit(NewExpr c)  throws CannotCompileException  {
-                        if (c.getClassName().equals("com.wurmonline.server.creatures.ai.StaticPathFinderNPC")) {
-                            logInfo(String.format("Patched path tile cost calculation in StaticPathFinderNPC.getCost at %d", c.getLineNumber()));
-                            c.replace("if (Tiles.isSolidCave(Tiles.decodeType(tile))) {"
-                                + "      return Float.MAX_VALUE;"
-                                + "    }"
-                                + "    if (Tiles.decodeHeight(tile) < 1) {\n"
-                                + "      return 3.0F;\n"
-                                + "    }\n"
-                                + "    \n"
-                                + "    if (Tiles.isRoadType(Tiles.decodeType(tile)) {\n"
-                                + "    return 1.0F;\n"
-                                + "    }\n"
-                                + "    \n"
-                                + "    return 2.0F;\n"
-                                );
-                        }
-                    }
-                });
+                .setBody("{ if (com.wurmonline.mesh.Tiles.isSolidCave(com.wurmonline.mesh.Tiles.decodeType($1))) { return Float.MAX_VALUE; } if (com.wurmonline.mesh.Tiles.decodeHeight($1) < 1) { return 3.0F; } if(useCustomCost == true) { if (com.wurmonline.mesh.Tiles.isRoadType(com.wurmonline.mesh.Tiles.decodeType($1))) { logger.log(java.util.logging.Level.INFO, \"Using custom cost on Road\"); return 1.0F;} return 2.0F; } else { return 1.0F; } }");
 
         } catch (Throwable e) {
             throw new RuntimeException(e);
