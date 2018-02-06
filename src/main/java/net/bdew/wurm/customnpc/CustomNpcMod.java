@@ -97,6 +97,30 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
                     .getMethod("getFace", "()J")
                     .insertBefore("if (net.bdew.wurm.customnpc.Hooks.isNpcTemplate(this.getTemplate())) return net.bdew.wurm.customnpc.Hooks.getFace(this);");
 
+            classPool.getCtClass("com.wurmonline.server.creatures.ai.StaticPathFinderNPC")
+                .getMethod("getCost", "(I)F")
+                .instrument(new ExprEditor() {
+                    @Override
+                    public void edit(NewExpr c)  throws CannotCompileException  {
+                        if (c.getClassName().equals("com.wurmonline.server.creatures.ai.StaticPathFinderNPC")) {
+                            logInfo(String.format("Patched path tile cost calculation in StaticPathFinderNPC.getCost at %d", c.getLineNumber()));
+                            c.replace("if (Tiles.isSolidCave(Tiles.decodeType(tile))) {"
+                                + "      return Float.MAX_VALUE;"
+                                + "    }"
+                                + "    if (Tiles.decodeHeight(tile) < 1) {\n"
+                                + "      return 3.0F;\n"
+                                + "    }\n"
+                                + "    \n"
+                                + "    if (Tiles.isRoadType(Tiles.decodeType(tile)) {\n"
+                                + "    return 1.0F;\n"
+                                + "    }\n"
+                                + "    \n"
+                                + "    return 2.0F;\n"
+                                );
+                        }
+                    }
+                });
+
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
