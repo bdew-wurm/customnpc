@@ -20,6 +20,7 @@ abstract public class MovementRandomArea implements IMovementScript {
 
     protected float movementChance = 0.1f;
     protected float movementSpeedMod = 1f;
+    protected int pathFindingType = 0;
 
     public float getMovementChance() {
         return movementChance;
@@ -37,16 +38,22 @@ abstract public class MovementRandomArea implements IMovementScript {
         this.movementSpeedMod = movementSpeedMod;
     }
 
+    public int getPathFindingType() {return pathFindingType;}
+
+    public void setPathFindingType(int pathFindingType) { this.pathFindingType = pathFindingType;}
+
     @Override
     public void saveToFile(PrintStream file) {
         file.println(String.format("    MovementChance: %.6f", this.movementChance));
         file.println(String.format("    MovementSpeedMod: %.6f", this.movementSpeedMod));
+        file.println(String.format("    PathFindingType: %s", this.pathFindingType));
     }
 
     @Override
     public void readFromObject(Map<String, Object> data) throws ConfigLoadError {
         movementChance = ((Number) data.getOrDefault("MovementChance", 0.1f)).floatValue();
         movementSpeedMod = ((Number) data.getOrDefault("MovementSpeedMod", 1f)).floatValue();
+        pathFindingType = ((Number) data.getOrDefault("PathFindingType", 0)).intValue();
     }
 
     protected abstract boolean isInsideZone(Creature creature);
@@ -71,6 +78,8 @@ abstract public class MovementRandomArea implements IMovementScript {
     public void configBML(Creature creature, StringBuilder buf) {
         buf.append("harray{label{text='Speed Modifier:'};input{id='movementSpeedMod'; text=\"").append(movementSpeedMod).append("\";maxchars='10'}}");
         buf.append("harray{label{text='Movement Chance:'};input{id='movementChance'; text=\"").append(movementChance).append("\";maxchars='10'}}");
+        buf.append("harray{label{text='Prefer roads:'};dropdown{id='pathFindingType'; options='No,Yes,Aggressive'; default='")
+        .append(pathFindingType).append("';}}");
     }
 
     @Override
@@ -79,5 +88,7 @@ abstract public class MovementRandomArea implements IMovementScript {
             movementSpeedMod = Float.parseFloat(properties.getProperty("movementSpeedMod"));
         if (properties.containsKey("movementChance"))
             movementChance = Float.parseFloat(properties.getProperty("movementChance"));
+        if (properties.containsKey("pathFindingType"))
+            pathFindingType = Integer.parseInt(properties.getProperty("pathFindingType"));
     }
 }
