@@ -3,6 +3,8 @@ package net.bdew.wurm.customnpc;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtField;
+import javassist.Modifier;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 import javassist.expr.NewExpr;
@@ -96,6 +98,30 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
             classPool.getCtClass("com.wurmonline.server.creatures.Npc")
                     .getMethod("getFace", "()J")
                     .insertBefore("if (net.bdew.wurm.customnpc.Hooks.isNpcTemplate(this.getTemplate())) return net.bdew.wurm.customnpc.Hooks.getFace(this);");
+
+
+            //logic in constructor to detect should custom cost function be used
+            CtClass staticPathFinderNPCCt = classPool
+                .getCtClass("com.wurmonline.server.creatures.ai.StaticPathFinderNPC");
+
+            CtField useCustomCost = new CtField(CtClass.booleanType, "useCustomCost", staticPathFinderNPCCt);
+            useCustomCost.setModifiers(Modifier.STATIC);
+
+            staticPathFinderNPCCt.addField(useCustomCost, CtField.Initializer.constant(false));
+
+            staticPathFinderNPCCt
+                .getConstructor("()V")
+                .setBody("{ if (new Throwable().getStackTrace()[1].getClassName() == \"net.bdew.wurm.customnpc.movement.MovementUtil\") { this.useCustomCost = true; } }");
+
+            //adjust tile cost
+            staticPathFinderNPCCt
+                .getMethod("getCost", "(I)F")
+                .setBody("{ if (com.wurmonline.mesh.Tiles.isSolidCave(com.wurmonline.mesh.Tiles.decodeType($1))) { return Float.MAX_VALUE; } if (com.wurmonline.mesh.Tiles.decodeHeight($1) < 1) { return 3.0F; } if(useCustomCost == true) { if (com.wurmonline.mesh.Tiles.isRoadType(com.wurmonline.mesh.Tiles.decodeType($1))) { return 1.0F;} return 2.0F; } else { return 1.0F; } }");
+
+            //reroute any calls from rayCast to astar
+            staticPathFinderNPCCt
+                .getMethod("rayCast", "(IIIIZ)Lcom/wurmonline/server/creatures/ai/Path;")
+                .insertBefore("if(useCustomCost == true) { return startAstar($1,$2,$3,$4);}");
 
         } catch (Throwable e) {
             throw new RuntimeException(e);
