@@ -99,11 +99,17 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
             // Make it non-final
             ctPathFinderNPC.setModifiers(ctPathFinderNPC.getModifiers() & ~Modifier.FINAL);
 
+            // Change private fields to protected so we can access them from our subclass
+            for (CtField field : ctPathFinderNPC.getDeclaredFields()) {
+                if ((field.getModifiers() & Modifier.PRIVATE) != 0)
+                    field.setModifiers((field.getModifiers() & ~Modifier.PRIVATE) | Modifier.PROTECTED);
+            }
+
             // Make a class that extends it
             CtClass ctPathFinderCustom = classPool.makeClass("com.wurmonline.server.creatures.ai.StaticPathFinderCustomNPC", ctPathFinderNPC);
 
             // Add field for our custom cost function
-            CtField ctPathFinderCostFunc = CtField.make("private java.util.function.Function costFunc;", ctPathFinderCustom);
+            CtField ctPathFinderCostFunc = CtField.make("private net.bdew.wurm.customnpc.movement.PathCostFunc costFunc;", ctPathFinderCustom);
             ctPathFinderCustom.addField(ctPathFinderCostFunc);
 
             // Override findPath method to grab the cost function and store it for later
@@ -123,7 +129,7 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
                 @Override
                 public void edit(MethodCall m) throws CannotCompileException {
                     if (m.getMethodName().equals("getCost"))
-                        m.replace("$_ = (Float) this.costFunc.apply(now);");
+                        m.replace("$_ = this.costFunc.apply(now);");
                 }
             });
 

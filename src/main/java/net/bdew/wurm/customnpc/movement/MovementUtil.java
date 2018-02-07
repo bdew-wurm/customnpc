@@ -44,5 +44,4 @@ public class MovementUtil {
             return Tiles.decodeHeight(p.getTile()) < 1 ? 3.0F : 1.0F;
         }
     }
-
 }
