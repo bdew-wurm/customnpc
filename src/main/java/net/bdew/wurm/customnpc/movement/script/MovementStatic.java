@@ -5,6 +5,7 @@ import com.wurmonline.server.creatures.CreatureStatus;
 import net.bdew.wurm.customnpc.CustomAIData;
 import net.bdew.wurm.customnpc.CustomAIScript;
 import net.bdew.wurm.customnpc.movement.MovementUtil;
+import net.bdew.wurm.customnpc.movement.PathCostFunc;
 import net.bdew.wurm.customnpc.movement.step.IMovementStep;
 
 import java.io.PrintStream;
@@ -47,5 +48,15 @@ public class MovementStatic implements IMovementScript, IMovementStep {
     @Override
     public void processConfig(Creature creature, Properties properties) {
 
+    }
+
+    @Override
+    public PathCostFunc getCostFunction(Creature creature) {
+        return MovementUtil::getCostSimple;
+    }
+
+    @Override
+    public boolean shouldAvoidRaycast(Creature creature) {
+        return false;
     }
 }

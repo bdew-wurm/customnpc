@@ -3,6 +3,7 @@ package net.bdew.wurm.customnpc;
 import com.wurmonline.server.WurmId;
 import com.wurmonline.server.creatures.*;
 import net.bdew.wurm.customnpc.manage.ManageBehaviourProvider;
+import net.bdew.wurm.customnpc.movement.PathCostFunc;
 
 import java.nio.ByteBuffer;
 
@@ -45,5 +46,13 @@ public class Hooks {
 
     public static long getFace(Npc npc) {
         return ((CustomAIData) (npc.getCreatureAIData())).getConfig().getFace();
+    }
+
+    public static PathCostFunc getCostFunction(Creature creature) {
+        return ((CustomAIData) (creature.getCreatureAIData())).getConfig().getMovementScript().getCostFunction(creature);
+    }
+
+    public static boolean getAvoidRaycast(Creature creature) {
+        return ((CustomAIData) (creature.getCreatureAIData())).getConfig().getMovementScript().shouldAvoidRaycast(creature);
     }
 }

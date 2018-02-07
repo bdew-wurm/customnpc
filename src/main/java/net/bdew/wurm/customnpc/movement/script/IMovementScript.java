@@ -5,6 +5,7 @@ import com.wurmonline.server.creatures.CreatureStatus;
 import net.bdew.wurm.customnpc.CustomAIData;
 import net.bdew.wurm.customnpc.CustomAIScript;
 import net.bdew.wurm.customnpc.config.ConfigLoadError;
+import net.bdew.wurm.customnpc.movement.PathCostFunc;
 import net.bdew.wurm.customnpc.movement.step.IMovementStep;
 
 import java.io.PrintStream;
@@ -21,4 +22,8 @@ public interface IMovementScript {
     void configBML(Creature creature, StringBuilder buf);
 
     void processConfig(Creature creature, Properties properties);
+
+    PathCostFunc getCostFunction(Creature creature);
+
+    boolean shouldAvoidRaycast(Creature creature);
 }

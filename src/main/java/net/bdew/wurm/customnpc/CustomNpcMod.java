@@ -88,14 +88,14 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
                         m.replace("$_ = $proceed() || net.bdew.wurm.customnpc.Hooks.canManage(this.player, $0);");
                         logInfo(String.format("Patched isReborn in Communicator.reallyHandle_CMD_MOVE_INVENTORY at %d", m.getLineNumber()));
                     }
-
                 }
             });
-
 
             classPool.getCtClass("com.wurmonline.server.creatures.Npc")
                     .getMethod("getFace", "()J")
                     .insertBefore("if (net.bdew.wurm.customnpc.Hooks.isNpcTemplate(this.getTemplate())) return net.bdew.wurm.customnpc.Hooks.getFace(this);");
+
+            ClassEdits.createPathFinderCustom(classPool);
 
         } catch (Throwable e) {
             throw new RuntimeException(e);

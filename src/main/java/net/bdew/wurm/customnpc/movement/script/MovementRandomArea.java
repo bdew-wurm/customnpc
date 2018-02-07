@@ -7,6 +7,8 @@ import net.bdew.wurm.customnpc.CustomAIData;
 import net.bdew.wurm.customnpc.CustomAIScript;
 import net.bdew.wurm.customnpc.CustomNpcMod;
 import net.bdew.wurm.customnpc.config.ConfigLoadError;
+import net.bdew.wurm.customnpc.movement.MovementUtil;
+import net.bdew.wurm.customnpc.movement.PathCostFunc;
 import net.bdew.wurm.customnpc.movement.TilePosLayer;
 import net.bdew.wurm.customnpc.movement.step.IMovementStep;
 import net.bdew.wurm.customnpc.movement.step.MovementPathfind;
@@ -79,5 +81,15 @@ abstract public class MovementRandomArea implements IMovementScript {
             movementSpeedMod = Float.parseFloat(properties.getProperty("movementSpeedMod"));
         if (properties.containsKey("movementChance"))
             movementChance = Float.parseFloat(properties.getProperty("movementChance"));
+    }
+
+    @Override
+    public PathCostFunc getCostFunction(Creature creature) {
+        return MovementUtil::getCostSimple;
+    }
+
+    @Override
+    public boolean shouldAvoidRaycast(Creature creature) {
+        return false;
     }
 }
