@@ -1,8 +1,6 @@
 package net.bdew.wurm.customnpc;
 
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
+import javassist.*;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 import javassist.expr.NewExpr;
@@ -88,14 +86,52 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
                         m.replace("$_ = $proceed() || net.bdew.wurm.customnpc.Hooks.canManage(this.player, $0);");
                         logInfo(String.format("Patched isReborn in Communicator.reallyHandle_CMD_MOVE_INVENTORY at %d", m.getLineNumber()));
                     }
-
                 }
             });
-
 
             classPool.getCtClass("com.wurmonline.server.creatures.Npc")
                     .getMethod("getFace", "()J")
                     .insertBefore("if (net.bdew.wurm.customnpc.Hooks.isNpcTemplate(this.getTemplate())) return net.bdew.wurm.customnpc.Hooks.getFace(this);");
+
+            // Grab vanilla StaticPathFinderNPC class
+            CtClass ctPathFinderNPC = classPool.getCtClass("com.wurmonline.server.creatures.ai.StaticPathFinderNPC");
+
+            // Make it non-final
+            ctPathFinderNPC.setModifiers(ctPathFinderNPC.getModifiers() & ~Modifier.FINAL);
+
+            // Make a class that extends it
+            CtClass ctPathFinderCustom = classPool.makeClass("com.wurmonline.server.creatures.ai.StaticPathFinderCustomNPC", ctPathFinderNPC);
+
+            // Add field for our custom cost function
+            CtField ctPathFinderCostFunc = CtField.make("private java.util.function.Function costFunc;", ctPathFinderCustom);
+            ctPathFinderCustom.addField(ctPathFinderCostFunc);
+
+            // Override findPath method to grab the cost function and store it for later
+            CtMethod mFindPathOverride = CtMethod.make(
+                    "public com.wurmonline.server.creatures.ai.Path findPath(com.wurmonline.server.creatures.Creature aCreature, int startTileX, int startTileY, int endTileX, int endTileY, boolean surf, int areaSz) {" +
+                            "this.costFunc = net.bdew.wurm.customnpc.Hooks.getCostFunction(aCreature);" +
+                            "return super.findPath(aCreature, startTileX, startTileY, endTileX, endTileY, surf, areaSz);" +
+                            "}", ctPathFinderCustom);
+            ctPathFinderCustom.addMethod(mFindPathOverride);
+
+            // Clone step2 method from original class
+            CtMethod mStep2Original = ctPathFinderNPC.getMethod("step2", "()I");
+            CtMethod mStep2Clone = new CtMethod(mStep2Original, ctPathFinderCustom, null);
+
+            // Change the clone to call our cost function
+            mStep2Clone.instrument(new ExprEditor() {
+                @Override
+                public void edit(MethodCall m) throws CannotCompileException {
+                    if (m.getMethodName().equals("getCost"))
+                        m.replace("$_ = (Float) this.costFunc.apply(now);");
+                }
+            });
+
+            // And put the cloned method in our custom class
+            ctPathFinderCustom.addMethod(mStep2Clone);
+
+            // fixme: save generated class for debugging, remove later
+            ctPathFinderCustom.writeFile();
 
         } catch (Throwable e) {
             throw new RuntimeException(e);

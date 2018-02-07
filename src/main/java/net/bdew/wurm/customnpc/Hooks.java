@@ -2,9 +2,11 @@ package net.bdew.wurm.customnpc;
 
 import com.wurmonline.server.WurmId;
 import com.wurmonline.server.creatures.*;
+import com.wurmonline.server.creatures.ai.PathTile;
 import net.bdew.wurm.customnpc.manage.ManageBehaviourProvider;
 
 import java.nio.ByteBuffer;
+import java.util.function.Function;
 
 public class Hooks {
     public static boolean isNpcTemplate(CreatureTemplate tpl) {
@@ -45,5 +47,9 @@ public class Hooks {
 
     public static long getFace(Npc npc) {
         return ((CustomAIData) (npc.getCreatureAIData())).getConfig().getFace();
+    }
+
+    public static Function<PathTile, Float> getCostFunction(Creature creature) {
+        return ((CustomAIData) (creature.getCreatureAIData())).getConfig().getMovementScript().getCostFunction(creature);
     }
 }

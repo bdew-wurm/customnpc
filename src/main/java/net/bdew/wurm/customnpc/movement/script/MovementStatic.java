@@ -2,6 +2,7 @@ package net.bdew.wurm.customnpc.movement.script;
 
 import com.wurmonline.server.creatures.Creature;
 import com.wurmonline.server.creatures.CreatureStatus;
+import com.wurmonline.server.creatures.ai.PathTile;
 import net.bdew.wurm.customnpc.CustomAIData;
 import net.bdew.wurm.customnpc.CustomAIScript;
 import net.bdew.wurm.customnpc.movement.MovementUtil;
@@ -10,6 +11,7 @@ import net.bdew.wurm.customnpc.movement.step.IMovementStep;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 
 public class MovementStatic implements IMovementScript, IMovementStep {
     @Override
@@ -47,5 +49,10 @@ public class MovementStatic implements IMovementScript, IMovementStep {
     @Override
     public void processConfig(Creature creature, Properties properties) {
 
+    }
+
+    @Override
+    public Function<PathTile, Float> getCostFunction(Creature creature) {
+        return MovementUtil::getCostSimple;
     }
 }

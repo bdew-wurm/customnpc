@@ -3,10 +3,12 @@ package net.bdew.wurm.customnpc.movement.script;
 import com.wurmonline.server.Server;
 import com.wurmonline.server.creatures.Creature;
 import com.wurmonline.server.creatures.CreatureStatus;
+import com.wurmonline.server.creatures.ai.PathTile;
 import net.bdew.wurm.customnpc.CustomAIData;
 import net.bdew.wurm.customnpc.CustomAIScript;
 import net.bdew.wurm.customnpc.CustomNpcMod;
 import net.bdew.wurm.customnpc.config.ConfigLoadError;
+import net.bdew.wurm.customnpc.movement.MovementUtil;
 import net.bdew.wurm.customnpc.movement.TilePosLayer;
 import net.bdew.wurm.customnpc.movement.step.IMovementStep;
 import net.bdew.wurm.customnpc.movement.step.MovementPathfind;
@@ -15,6 +17,7 @@ import net.bdew.wurm.customnpc.movement.step.MovementTeleport;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 
 abstract public class MovementRandomArea implements IMovementScript {
 
@@ -79,5 +82,10 @@ abstract public class MovementRandomArea implements IMovementScript {
             movementSpeedMod = Float.parseFloat(properties.getProperty("movementSpeedMod"));
         if (properties.containsKey("movementChance"))
             movementChance = Float.parseFloat(properties.getProperty("movementChance"));
+    }
+
+    @Override
+    public Function<PathTile, Float> getCostFunction(Creature creature) {
+        return MovementUtil::getCostSimple;
     }
 }
