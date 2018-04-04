@@ -2,9 +2,11 @@ package net.bdew.wurm.customnpc.config;
 
 import com.wurmonline.server.creatures.Communicator;
 import com.wurmonline.server.creatures.Creature;
+import com.wurmonline.server.creatures.DbCreatureStatus;
 import com.wurmonline.server.questions.Question;
 import net.bdew.wurm.customnpc.CustomAIData;
 import net.bdew.wurm.customnpc.CustomNpcMod;
+import org.gotti.wurmunlimited.modloader.ReflectionUtil;
 import org.gotti.wurmunlimited.modsupport.questions.ModQuestion;
 import org.gotti.wurmunlimited.modsupport.questions.ModQuestions;
 
@@ -56,6 +58,7 @@ public class SettingsQuestion implements ModQuestion {
                 changed = true;
                 npc.setVisible(false);
                 npc.setName(newName);
+                ReflectionUtil.callPrivateMethod(npc.getStatus(), ReflectionUtil.getMethod(DbCreatureStatus.class, "saveCreatureName", new Class[]{String.class}), newName);
                 data.getConfig().setName(newName);
                 data.configUpdated();
             } catch (Exception e) {
