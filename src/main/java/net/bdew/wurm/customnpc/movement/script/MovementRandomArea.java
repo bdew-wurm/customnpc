@@ -15,6 +15,7 @@ import net.bdew.wurm.customnpc.movement.step.MovementPathfind;
 import net.bdew.wurm.customnpc.movement.step.MovementTeleport;
 
 import java.io.PrintStream;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -41,8 +42,8 @@ abstract public class MovementRandomArea implements IMovementScript {
 
     @Override
     public void saveToFile(PrintStream file) {
-        file.println(String.format("    MovementChance: %.6f", this.movementChance));
-        file.println(String.format("    MovementSpeedMod: %.6f", this.movementSpeedMod));
+        file.println(String.format(Locale.US, "    MovementChance: %.6f", this.movementChance));
+        file.println(String.format(Locale.US, "    MovementSpeedMod: %.6f", this.movementSpeedMod));
     }
 
     @Override
