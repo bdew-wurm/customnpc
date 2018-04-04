@@ -1,5 +1,6 @@
 package net.bdew.wurm.customnpc;
 
+import com.wurmonline.server.WurmCalendar;
 import com.wurmonline.server.creatures.Creature;
 import com.wurmonline.server.creatures.ai.CreatureAI;
 import com.wurmonline.server.creatures.ai.CreatureAIData;
@@ -20,6 +21,16 @@ public class CustomAIScript extends CreatureAI {
             data.setNextMovement(null);
         }
         return false;
+    }
+
+    @Override
+    protected boolean pollMisc(Creature c, long delta) {
+        CustomAIData data = (CustomAIData) (c.getCreatureAIData());
+        if (data.lastAnim < WurmCalendar.getCurrentTime() - 10) {
+            CustomNpcMod.logInfo(String.format("Sending anim %d", WurmCalendar.getCurrentTime()));
+            c.getCurrentTile().sendAnimation(c, "fight_strike.10", false, -10L);
+        }
+        return super.pollMisc(c, delta);
     }
 
     @Override

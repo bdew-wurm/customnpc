@@ -13,6 +13,7 @@ public class CustomAIData extends CreatureAIData {
     private static File dataPath;
     private NPCConfig config;
     private IMovementStep nextMovement;
+    public long lastAnim = Long.MIN_VALUE;
 
     public NPCConfig getConfig() {
         if (config == null) {
