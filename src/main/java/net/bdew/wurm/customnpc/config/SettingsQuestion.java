@@ -43,7 +43,7 @@ public class SettingsQuestion implements ModQuestion {
 
         buf.append(ModQuestions.createAnswerButton2(question, "Save"));
 
-        question.getResponder().getCommunicator().sendBml(250, 400, true, true, buf.toString(), 200, 200, 200, question.getTitle());
+        question.getResponder().getCommunicator().sendBml(400, 600, true, true, buf.toString(), 200, 200, 200, question.getTitle());
     }
 
     @Override
