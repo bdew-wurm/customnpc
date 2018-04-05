@@ -95,6 +95,10 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
                     .getMethod("getFace", "()J")
                     .insertBefore("if (net.bdew.wurm.customnpc.Hooks.isNpcTemplate(this.getTemplate())) return net.bdew.wurm.customnpc.Hooks.getFace(this);");
 
+            CtClass ctItem = classPool.getCtClass("com.wurmonline.server.items.Item");
+            ctItem.getMethod("sendWear", "(Lcom/wurmonline/server/items/Item;B)V")
+                    .insertAfter("if ((this.place == 13 || this.place == 14)) net.bdew.wurm.customnpc.Hooks.sendWear(this.getOwnerOrNull(), this.place, item);");
+
             ClassEdits.createPathFinderCustom(classPool);
 
         } catch (Throwable e) {

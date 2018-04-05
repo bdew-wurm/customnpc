@@ -2,6 +2,8 @@ package net.bdew.wurm.customnpc;
 
 import com.wurmonline.server.WurmId;
 import com.wurmonline.server.creatures.*;
+import com.wurmonline.server.items.Item;
+import com.wurmonline.server.items.WurmColor;
 import net.bdew.wurm.customnpc.manage.ManageBehaviourProvider;
 import net.bdew.wurm.customnpc.movement.PathCostFunc;
 
@@ -54,5 +56,11 @@ public class Hooks {
 
     public static boolean getAvoidRaycast(Creature creature) {
         return ((CustomAIData) (creature.getCreatureAIData())).getConfig().getMovementScript().shouldAvoidRaycast(creature);
+    }
+
+    public static void sendWear(Creature owner, short place, Item item) {
+        if (owner != null && isNpcTemplate(owner.getTemplate())) {
+            owner.getCurrentTile().sendWieldItem(owner.getWurmId(), (byte) (place == 13 ? 0 : 1), item.getModelName(), item.getRarity(), WurmColor.getColorRed(item.color), WurmColor.getColorGreen(item.color), WurmColor.getColorBlue(item.color), WurmColor.getColorRed(item.color2), WurmColor.getColorGreen(item.color2), WurmColor.getColorBlue(item.color2));
+        }
     }
 }
