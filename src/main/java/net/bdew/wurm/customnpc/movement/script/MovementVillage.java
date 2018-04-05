@@ -1,7 +1,7 @@
 package net.bdew.wurm.customnpc.movement.script;
 
+import com.wurmonline.math.TilePos;
 import com.wurmonline.server.NoSuchItemException;
-import com.wurmonline.server.Server;
 import com.wurmonline.server.creatures.Creature;
 import com.wurmonline.server.villages.NoSuchVillageException;
 import com.wurmonline.server.villages.Village;
@@ -13,7 +13,7 @@ import net.bdew.wurm.customnpc.movement.TilePosLayer;
 import java.io.PrintStream;
 import java.util.Map;
 
-public class MovementVillage extends MovementRandomArea implements IMovementScript {
+public class MovementVillage extends MovementSquareArea {
 
     private Village village;
 
@@ -23,6 +23,16 @@ public class MovementVillage extends MovementRandomArea implements IMovementScri
 
     public void setVillage(Village village) {
         this.village = village;
+    }
+
+    @Override
+    protected TilePos getNECorner() {
+        return TilePos.fromXY(village.startx, village.starty);
+    }
+
+    @Override
+    protected TilePos getSWCorner() {
+        return TilePos.fromXY(village.startx, village.starty);
     }
 
 
@@ -52,13 +62,6 @@ public class MovementVillage extends MovementRandomArea implements IMovementScri
     }
 
     @Override
-    protected TilePosLayer randomTile(Creature creature) {
-        int targetX = village.startx + Server.rand.nextInt(village.endx - village.startx);
-        int targetY = village.starty + Server.rand.nextInt(village.endy - village.starty);
-        return new TilePosLayer(targetX, targetY, creature.isOnSurface());
-    }
-
-    @Override
     protected TilePosLayer originTile(Creature creature) {
         try {
             return TilePosLayer.from(village.getToken());
@@ -71,7 +74,6 @@ public class MovementVillage extends MovementRandomArea implements IMovementScri
     @Override
     public void configBML(Creature creature, StringBuilder buf) {
         buf.append("label{type='bold';text=\"Movement: Wander in village - ").append(village.getName()).append("\"}");
-        buf.append("text{text=''}");
         super.configBML(creature, buf);
     }
 

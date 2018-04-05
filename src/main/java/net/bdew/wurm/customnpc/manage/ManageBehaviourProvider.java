@@ -24,6 +24,7 @@ public class ManageBehaviourProvider implements BehaviourProvider {
         movementActions.add(new MovementStaticAction());
         movementActions.add(new MovementHouseAction());
         movementActions.add(new MovementVillageAction());
+        movementActions.add(new MovementZoneAction());
     }
 
     public static boolean canManage(Creature performer, Creature target) {

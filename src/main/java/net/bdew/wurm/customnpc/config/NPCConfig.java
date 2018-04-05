@@ -3,10 +3,7 @@ package net.bdew.wurm.customnpc.config;
 import com.wurmonline.server.Server;
 import com.wurmonline.server.creatures.Creature;
 import net.bdew.wurm.customnpc.CustomNpcMod;
-import net.bdew.wurm.customnpc.movement.script.IMovementScript;
-import net.bdew.wurm.customnpc.movement.script.MovementHouse;
-import net.bdew.wurm.customnpc.movement.script.MovementStatic;
-import net.bdew.wurm.customnpc.movement.script.MovementVillage;
+import net.bdew.wurm.customnpc.movement.script.*;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileReader;
@@ -73,6 +70,9 @@ public class NPCConfig {
                     break;
                 case "House":
                     movementScript = new MovementHouse();
+                    break;
+                case "Zone":
+                    movementScript = new MovementZone();
                     break;
                 default:
                     throw new ConfigLoadError("Unknown movement type: " + movement.get("Type"));
