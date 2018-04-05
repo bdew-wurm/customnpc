@@ -43,7 +43,7 @@ public class CustomNpcMod implements WurmServerMod, Initable, PreInitable, Confi
             ClassPool classPool = HookManager.getInstance().getClassPool();
 
             CtClass ctCreature = classPool.getCtClass("com.wurmonline.server.creatures.Creature");
-            ctCreature.getMethod("doNew", "(IZFFFILjava/lang/String;BBBZB)Lcom/wurmonline/server/creatures/Creature;")
+            ctCreature.getMethod("doNew", "(IZFFFILjava/lang/String;BBBZBI)Lcom/wurmonline/server/creatures/Creature;")
                     .instrument(new ExprEditor() {
                         @Override
                         public void edit(NewExpr c) throws CannotCompileException {

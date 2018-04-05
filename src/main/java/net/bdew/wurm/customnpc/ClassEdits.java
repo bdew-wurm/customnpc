@@ -63,7 +63,5 @@ public class ClassEdits {
 
         // And put the cloned method in our custom class
         ctPathFinderCustom.addMethod(mStep2Clone);
-
-        ctPathFinderCustom.debugWriteFile();
     }
 }
